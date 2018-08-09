@@ -16,12 +16,13 @@ Route::get('/', ['as' => 'index', 'uses' => 'TaskController@index', 'middleware'
 
 Route::any('/registrar-tarea', ['as' => 'registrar.tarea', 'uses' => 'TaskController@registrar_tarea', 'middleware' => 'auth']);
 
-Route::get('/home', 'HomeController@index')->name('home');
-
 Route::any('/delete-task/{task_id}', ['as' => 'delete.task', 'uses' => 'TaskController@delete']);
 
 Route::any('/update-status/{task_id}/{status}', ['as' => 'update.status', 'uses' => 'TaskController@update_status']);
 
+Route::any('/edit-task/{task_id}', ['as' => 'task.edit', 'uses' => 'TaskController@edit_task']);
+
+Route::any('/edit/{task_id}', ['as' => 'edit', 'uses' => 'TaskController@edit']);
 
 Auth::routes();
 

@@ -18,8 +18,15 @@
     <strong>Done!</strong> the status has been updated.
   </div>
 </div>
+
+<div class="row-fluid">
+  <div id="update" class="alert alert-info" style="display: none;">
+    <strong>Updated!</strong> the current task has been updated.
+  </div>
+</div>
 <!-- end notifications -->
 
+<hr>
   <div class="row">
     <div class="col-md-6">
       <form action="{{route('registrar.tarea')}}" method="post">
@@ -52,10 +59,10 @@
             <td>
               <div class="btn-group" role="group">
                 <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Dropdown
+                  Opciones
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                  <a class="dropdown-item" href="#">Edit</a>
+                  <a class="dropdown-item" href="{{route('task.edit', $task->id)}}">Edit</a>
                   <a class="dropdown-item" href="{{route('delete.task', $task->id)}}">Delete</a>
                   @if($task->status == 'New')
                     <a class="dropdown-item" href="{{route('update.status', [$task->id, 'In progress'])}}">Start</a>
@@ -84,10 +91,17 @@
     </script>
     @endif
 
-    @if(session('message') == 'tarea-actualizada')
+    @if(session('message') == 'status-actualizado')
     <script type="text/javascript">
         $('#updated').fadeIn(1000);
         $('#updated').delay(3000).fadeOut(1000);
+    </script>
+    @endif
+
+    @if(session('message') == 'tarea-actualizada')
+    <script type="text/javascript">
+        $('#update').fadeIn(1000);
+        $('#update').delay(3000).fadeOut(1000);
     </script>
     @endif
   </div>
