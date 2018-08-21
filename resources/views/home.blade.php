@@ -14,6 +14,10 @@
                         </div>
                     @endif
 
+                        <a href="{{ route('index', auth()->id()) }}" class="btn btn-info">
+                            Registrar Tarea
+                        </a>
+
                     You are logged in!
                 </div>
             </div>

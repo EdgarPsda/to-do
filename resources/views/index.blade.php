@@ -63,7 +63,19 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                   <a class="dropdown-item" href="{{route('task.edit', $task->id)}}">Edit</a>
-                  <a class="dropdown-item" href="{{route('delete.task', $task->id)}}">Delete</a>
+
+                  <form action="{{ route('delete.task', $task->id) }}" method="post">
+
+                    @csrf
+
+                    @method('DELETE')
+
+                    <button class="dropdown-item">
+                      Delete
+                    </button>
+
+                  </form>
+
                   @if($task->status == 'New')
                     <a class="dropdown-item" href="{{route('update.status', [$task->id, 'In progress'])}}">Start</a>
                   @elseif($task->status == 'In progress')
