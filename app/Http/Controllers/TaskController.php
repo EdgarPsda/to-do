@@ -2,59 +2,81 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Task;
+use App\User;
+use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
 
-public function index(Request $request)
-{
-  $tasks = Task::select()->where('user_id',$request->user()->id)->get();
-  // dd($tasks);
-  return view('index', compact('tasks'));
-}
+    public function index(User $user)
+    {
+    //  $tasks = Task::select()->where('user_id',$request->user()->id)->get();
+    //
+    //  return view('index', compact('tasks'));
 
-public function registrar_tarea(Request $request)
-{
-  $task = new Task();
-  $task->user_id = $request->user()->id;
-  $task->task = $request->input('task');
-  $task->status = 'New';
-  $task->save();
+        return view('index', [
 
-  return redirect('/')->with('message', 'tarea-creada');
-}
+            'tasks' => Task::where('user_id', $user->id)->get()
 
-public function delete($task_id)
-{
-  $task = new Task();
-  $task = Task::select()->where('id', $task_id)->delete();
-  return redirect('/')->with('message', 'tarea-eliminada');
-}
+        ]);
+    }
 
-// Update status
-public function update_status($task_id, $status)
-{
-  $task = new Task();
-  $task = Task::where('id',$task_id)->update(['status' => $status]);
-  return redirect('/')->with('message', 'status-actualizado');
-}
+    public function registrar_tarea(Request $request)
+    {
+      $task = new Task();
+      $task->user_id = auth()->id();
+      $task->task = $request->input('task');
+      $task->status = 'New';
+      $task->save();
 
-public function edit($task_id, Request $request)
-{
+    //  return redirect('/')->with('message', 'tarea-creada');
 
-  $task = new Task();
-  $task = Task::where('id',$task_id)->update(['task' => $request->input('updateTask')]);
-  return redirect('/')->with('message', 'tarea-actualizada');
-}
+      return redirect()->route('index', $task->user->id)->with('message', 'tarea-creada');
+    }
 
-public function edit_task($task_id)
-{
-  $task = new Task();
-  $task = Task::select()->where('id', $task_id)->get();
-  return view('edit', compact('task'));
-  // $task = Task::where('id',$task_id)->update(['task' => $task]);
-  // return redirect('/')->with('message', 'task-updated');
-}
+    public function delete(Task $task)
+    {
+    //  $task = new Task();
+    //  $task = Task::select()->where('id', $task_id)->delete();
+
+        $task->delete();
+
+        return redirect()->back()->with('message', 'tarea-eliminada');
+    }
+
+    // Update status
+    public function update_status(Task $task, $status)
+    {
+    //  $task = Task::where('id',$task_id)->update(['status' => $status]);
+
+        $task->update(['status' => $status]);
+
+      return redirect()->route('index', $task->user->id)->with('message', 'status-actualizado');
+    }
+
+    public function edit(Request $request, Task $task)
+    {
+
+    //  $task = new Task();
+    //  $task = Task::where('id',$task_id)->update(['task' => $request->input('updateTask')]);
+    //  return redirect('/')->with('message', 'tarea-actualizada');
+
+        $task->update(['task' => $request->input('updateTask')]);
+
+        return redirect()->route('index', auth()->id())->with('message', 'tarea-actualizada');
+    }
+
+    public function edit_task(Task $task)
+    {
+    //  $task = new Task();
+    //  $task = Task::select()->where('id', $task_id)->get();
+    //  return view('edit', compact('task'));
+
+        return view('edit', [
+
+            'task' => $task
+
+        ]);
+    }
 }
